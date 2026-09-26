@@ -2,42 +2,42 @@
 
 ## 1. Thông tin cá nhân
 
-| Thông tin | Nội dung |
-| --- | --- |
-| Họ và tên | Phạm Thị Ngọc Anh |
-| MSSV | 2A202602831 |
-| Khóa/Lớp | K4-L3B |
-| Tên nhóm | A04 |
-| Vai trò chính | Data Foundation – Crossref Ingestion & Data Cleaning |
-| Repository | https://github.com/thanhpd123/K4-L3B-Day10-A04-Data-Pipeline-Data-Observability |
-| Ngày hoàn thành | 26/09/2026 |
+| Thông tin       | Nội dung                                                                        |
+| --------------- | ------------------------------------------------------------------------------- |
+| Họ và tên       | Phạm Thị Ngọc Anh                                                               |
+| MSSV            | 2A202602831                                                                     |
+| Khóa/Lớp        | K4-L3B                                                                          |
+| Tên nhóm        | A04                                                                             |
+| Vai trò chính   | Data Foundation – Crossref Ingestion & Data Cleaning                            |
+| Repository      | https://github.com/thanhpd123/K4-L3B-Day10-A04-Data-Pipeline-Data-Observability |
+| Ngày hoàn thành | 26/09/2026                                                                      |
 
 ## 2. Vai trò và phạm vi công việc
 
 ### Phần việc sở hữu
 
-| Module/deliverable | File/hàm phụ trách | Input nhận vào | Output bàn giao | Trạng thái |
-| --- | --- | --- | --- | --- |
-| Thu thập metadata Crossref | `src/ingestion/crossref.py`: `parse_crossref_payload`, `fetch_source_records`, `load_raw_records` | `Settings`, Crossref `/works` payload hoặc snapshot local | `data/raw/crossref_response.json`, `data/raw/crossref_records.json` | Hoàn thành |
-| Chuẩn hóa raw metadata | `src/ingestion/crossref.py` | DOI, title, abstract JATS/XML, author, subject, date, URL | Danh sách `PaperRecord` đã chuẩn hóa | Hoàn thành |
-| Cleaning và pre-embedding model | `src/ingestion/cleaning.py`: `build_clean_dataframe` | `list[PaperRecord]`, `run_date` | DataFrame sạch | Hoàn thành |
+| Module/deliverable              | File/hàm phụ trách                                                                                | Input nhận vào                                            | Output bàn giao                                                     | Trạng thái |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- | ---------- |
+| Thu thập metadata Crossref      | `src/ingestion/crossref.py`: `parse_crossref_payload`, `fetch_source_records`, `load_raw_records` | `Settings`, Crossref `/works` payload hoặc snapshot local | `data/raw/crossref_response.json`, `data/raw/crossref_records.json` | Hoàn thành |
+| Chuẩn hóa raw metadata          | `src/ingestion/crossref.py`                                                                       | DOI, title, abstract JATS/XML, author, subject, date, URL | Danh sách `PaperRecord` đã chuẩn hóa                                | Hoàn thành |
+| Cleaning và pre-embedding model | `src/ingestion/cleaning.py`: `build_clean_dataframe`                                              | `list[PaperRecord]`, `run_date`                           | DataFrame sạch                                                      | Hoàn thành |
 
 
 ### Việc hỗ trợ ngoài phạm vi chính
 
-| Hoạt động | Thành viên/module được hỗ trợ | Kết quả |
-| --- | --- | --- |
-| none| none | none|
+| Hoạt động                                  | Thành viên/module được hỗ trợ | Kết quả |
+| ------------------------------------------ | ----------------------------- | ------- |
+| Không có hoạt động nào ngoài phạm vi chính | —                             | —       |
 
 ## 3. Kết quả theo vai trò
 
-| Nhiệm vụ đã thực hiện | File/hàm/artifact liên quan | Kết quả bàn giao | Cách xác minh |
-| --- | --- | --- | --- |
-| Gọi Crossref API có retry và offline fallback | `fetch_source_records()` | Retry lỗi mạng, `429`, `500`, `502`, `503`, `504`; fallback sang raw snapshot khi API không khả dụng | Chạy lệnh kiểm tra số record |
-| Parse và bảo toàn raw data | `parse_crossref_payload()`, `data/raw/` | 24 `PaperRecord`; giữ cả response gốc và records sau bóc tách | Mở hai artifact JSON hoặc load bằng `load_raw_records()` |
-| Chuẩn hóa văn bản và ngày | `build_clean_dataframe()` | Chuẩn hóa whitespace/HTML, parse date, tính `age_days`, loại DOI trùng | Kiểm tra DataFrame và clean artifacts |
+| Nhiệm vụ đã thực hiện                         | File/hàm/artifact liên quan             | Kết quả bàn giao                                                                                     | Cách xác minh                                            |
+| --------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| Gọi Crossref API có retry và offline fallback | `fetch_source_records()`                | Retry lỗi mạng, `429`, `500`, `502`, `503`, `504`; fallback sang raw snapshot khi API không khả dụng | Chạy lệnh kiểm tra số record                             |
+| Parse và bảo toàn raw data                    | `parse_crossref_payload()`, `data/raw/` | 24 `PaperRecord`; giữ cả response gốc và records sau bóc tách                                        | Mở hai artifact JSON hoặc load bằng `load_raw_records()` |
+| Chuẩn hóa văn bản và ngày                     | `build_clean_dataframe()`               | Chuẩn hóa whitespace/HTML, parse date, tính `age_days`, loại DOI trùng                               | Kiểm tra DataFrame và clean artifacts                    |
 
-Output cụ thể của phần việc là bộ dữ liệu raw và clean gồm 24 bài báo. Clean dataset có 24 DOI duy nhất, không thiếu title/summary, `summary_chars` nhỏ nhất là 826 và `age_days`. Commit bàn giao: `837b58e` (`collect and clean data`).
+Output cụ thể của phần việc là bộ dữ liệu raw và clean gồm 24 bài báo. Clean dataset có 24 DOI duy nhất, không thiếu title/summary, `summary_chars` nhỏ nhất là 826 và `age_days` nằm trong khoảng 11–178 nên cả 24 bài đều đạt ngưỡng freshness 180 ngày. Commit bàn giao: `837b58e` (`collect and clean data`).
 
 ## 4. Giải thích phần kỹ thuật đã thực hiện
 
@@ -56,12 +56,12 @@ Metadata từ Crossref có cấu trúc lồng nhau, title là mảng, abstract c
 
 ### Input, output và contract
 
-| Thành phần | Mô tả |
-| --- | --- |
-| Input | Crossref `/works` JSON; hoặc `list[PaperRecord]` và `run_date` cho cleaning |
-| Output | Raw JSON, normalized records JSON, DataFrame/CSV/JSON clean với 16 cột |
-| Module phụ thuộc | `core.config`, `core.utils`, `requests`, `pandas` |
-| Module sử dụng output | `retrieval/index.py`, `evaluation/testset.py`, `observability/quality.py`, pipeline orchestration |
+| Thành phần              | Mô tả                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------- |
+| Input                   | Crossref `/works` JSON; hoặc `list[PaperRecord]` và `run_date` cho cleaning                             |
+| Output                  | Raw JSON, normalized records JSON, DataFrame/CSV/JSON clean với 16 cột                                  |
+| Module phụ thuộc        | `core.config`, `core.utils`, `requests`, `pandas`                                                       |
+| Module sử dụng output   | `retrieval/index.py`, `evaluation/testset.py`, `observability/quality.py`, pipeline orchestration       |
 | Điều kiện lỗi cần xử lý | Mất mạng, rate limit/5xx, JSON sai dạng, thiếu DOI/title/summary/date, ngày không parse được, DOI trùng |
 
 ### Cách xác minh
@@ -105,23 +105,23 @@ python -c "from datetime import datetime, timezone; from core.config import load
 
 ### Metrics chính
 
-| Metric/signal | Baseline | Corrupted | Repaired | Nhận xét của cá nhân |
-| --- | ---: | ---: | ---: | --- |
-| `retrieval_hit_rate` | Chưa đo | Chưa đo | Chưa đo | Không thuộc artifact đã hoàn thành |
-| `mean_token_f1` | Chưa đo | Chưa đo | Chưa đo | Chưa chạy evaluation pipeline |
-| `judge_accuracy` | Chưa đo | Chưa đo | Chưa đo | Chưa chạy LLM judge |
-| `mean_judge_score` | Chưa đo | Chưa đo | Chưa đo | Chưa chạy LLM judge |
-| Quality checks | Chưa chạy GX | Chưa chạy | Chưa chạy | Mới xác minh pre-check: 24 DOI duy nhất, title/summary đầy đủ |
-| Freshness status | Chưa có report | Chưa có report | Chưa có report | Clean data có `age_days` 11–178; chưa thay thế freshness report chính thức |
+| Metric/signal        | Baseline | Corrupted | Repaired | Nhận xét của cá nhân                                                                                 |
+| -------------------- | -------: | --------: | -------: | ---------------------------------------------------------------------------------------------------- |
+| `retrieval_hit_rate` |   1.0000 |    0.5000 |   1.0000 | Corruption xoá mất tài liệu ground truth nên nửa bộ đề không còn gì để truy hồi.                     |
+| `mean_token_f1`      |   0.5000 |    0.2274 |   0.5000 | Nhóm câu mất tài liệu trả lời lệch hẳn so với đáp án.                                                |
+| `judge_accuracy`     |   0.5000 |    0.2000 |   0.5000 | Chỉ 2/10 câu được chấm đúng khi dữ liệu bẩn.                                                         |
+| `mean_judge_score`   |   3.0000 |    1.8000 |   3.0000 | Điểm trung bình tụt rồi quay lại đúng mức cũ.                                                        |
+| Quality checks       |     PASS |      FAIL |     PASS | GX bắt `paper_id` trùng và summary ngắn hơn 30 ký tự.                                                |
+| Freshness status     |    FRESH |     FRESH |    FRESH | `age_days` 11–178 trên dữ liệu sạch; corrupted có 2/21 bài bị lùi ngày (9.52%), vẫn dưới ngưỡng 25%. |
 
 ### Kết luận từ số liệu
 
-1. Corruption flow chưa được chạy nên chưa có bằng chứng để kết luận corruption làm thay đổi quality/freshness hay agent metric.
-2. Repair flow chưa được chạy nên chưa thể khẳng định mức phục hồi.
+1. Corruption flow đã chạy trên đúng bộ test set cũ: dữ liệu bẩn còn 21 dòng → `retrieval_hit_rate` 1.0000 → 0.5000, `judge_accuracy` 0.5000 → 0.2000, quality gate chuyển PASS → FAIL.
+2. Repair dựng lại dữ liệu từ raw snapshot → 24 dòng khớp baseline, quality gate PASS trở lại và cả 4 chỉ số RAG phục hồi 100%.
 
-Chưa thể xác định corruption nào ảnh hưởng rõ nhất khi chưa có `corruption_log.json` và bộ metrics ba trạng thái.
+Corruption ảnh hưởng rõ nhất là `drop_latest_records`: nó xoá 5 bài mới nhất, đúng 5 bài mà test set hỏi tới, nên 5 câu `eval_001`–`eval_005` mất `retrieval_hit`. Năm kịch bản còn lại không làm chỉ số RAG thay đổi, chỉ có quality gate bắt được `blank_summary` và `duplicate_rows`.
 
-Kết quả khác kỳ vọng là 24 records live đều không có `subject/categories`, dù title, abstract và authors đầy đủ. Kiểm tra trực tiếp raw records cho thấy đây là metadata nguồn bị thiếu chứ không phải cleaning làm mất dữ liệu. Điều này cần được tính đến khi xây câu hỏi evaluation loại `categories`.
+Kết quả khác kỳ vọng là 24 records live đều không có `subject/categories`, dù title, abstract và authors đầy đủ. Kiểm tra trực tiếp raw records cho thấy đây là metadata nguồn bị thiếu chứ không phải cleaning làm mất dữ liệu. Hệ quả đã thấy rõ trong kết quả: 2 câu hỏi `categories` sai ở cả ba trạng thái vì `categories_joined` rỗng, ground truth phải fallback về chuỗi "General AI". Đây là hạn chế của nguồn dữ liệu chứ không phải lỗi pipeline, nhưng nó kéo `judge_accuracy` xuống và cần được nêu rõ khi đọc kết quả.
 
 ## 9. Điều học được và hướng cải thiện
 

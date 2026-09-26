@@ -7,7 +7,10 @@ from typing import Any
 
 import pandas as pd
 
+from core.config import Settings
 from core.utils import write_json
+from ingestion.cleaning import build_clean_dataframe
+from ingestion.crossref import load_raw_records
 
 
 def corrupt_clean_dataframe(
@@ -154,3 +157,29 @@ def _rebuild_derived_columns(df: pd.DataFrame) -> None:
             ),
             axis=1,
         )
+
+
+def repair_from_raw_snapshot(
+    settings: Settings, run_date: datetime | None = None
+) -> pd.DataFrame:
+    """Rebuild the clean corpus from the immutable raw snapshot (idempotent repair).
+
+    Repair never patches the damaged dataframe in place. It re-runs the normal
+    cleaning contract over ``data/raw/crossref_records.json``, which is the same
+    trusted source the baseline used, so repeated repair runs converge on the
+    exact same clean dataset instead of accumulating ad-hoc fixes.
+    """
+    raw_records_path = settings.paths.raw_records_json
+    if not raw_records_path.exists():
+        raise FileNotFoundError(
+            f"The raw snapshot {raw_records_path} is missing; repair from raw is impossible."
+        )
+
+    raw_records = load_raw_records(raw_records_path)
+    if not raw_records:
+        raise ValueError(f"The raw snapshot {raw_records_path} contains no usable records.")
+
+    repaired = build_clean_dataframe(raw_records, run_date or datetime.now(UTC))
+    if repaired.empty:
+        raise ValueError("Repair produced an empty dataset; refusing to overwrite artifacts.")
+    return repaired
