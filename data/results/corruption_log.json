@@ -1,0 +1,78 @@
+[
+  {
+    "scenario": "drop_latest_records",
+    "description": "Removed the newest 20% of records by publication date.",
+    "affected_rows": 5,
+    "affected_paper_ids": [
+      "10.21203/rs.3.rs-10489777/v1",
+      "10.70267/aitia.2026482489",
+      "10.21203/rs.3.rs-10349437/v1",
+      "10.54254/2755-2721/2026.36624",
+      "10.36887/2415-8453-2026-3-2"
+    ],
+    "parameters": {
+      "fraction": 0.2
+    }
+  },
+  {
+    "scenario": "blank_summary",
+    "description": "Replaced summaries with empty strings.",
+    "affected_rows": 2,
+    "affected_paper_ids": [
+      "10.28932/jutisi.v12i2.13099",
+      "10.20944/preprints202608.1849.v1"
+    ],
+    "parameters": {
+      "fraction_of_remaining_rows": 0.1
+    }
+  },
+  {
+    "scenario": "inject_noise",
+    "description": "Appended synthetic noise characters to summaries.",
+    "affected_rows": 2,
+    "affected_paper_ids": [
+      "10.21203/rs.3.rs-10423755/v1",
+      "10.3390/knowledge6030022"
+    ],
+    "parameters": {
+      "noise": "###@@@!!! $$$%^&* ###"
+    }
+  },
+  {
+    "scenario": "truncate_title",
+    "description": "Truncated titles to at most five characters.",
+    "affected_rows": 2,
+    "affected_paper_ids": [
+      "10.36948/ijfmr.2026.v08i04.85777",
+      "10.2118/234689-pa"
+    ],
+    "parameters": {
+      "max_title_length": 5
+    }
+  },
+  {
+    "scenario": "stale_date",
+    "description": "Set publication dates to 365 days before the corruption run.",
+    "affected_rows": 2,
+    "affected_paper_ids": [
+      "10.1007/s10278-026-02086-9",
+      "10.21203/rs.3.rs-10178277/v1"
+    ],
+    "parameters": {
+      "days_ago": 365,
+      "published": "2025-09-26"
+    }
+  },
+  {
+    "scenario": "duplicate_rows",
+    "description": "Appended copies of selected rows to create duplicate records.",
+    "affected_rows": 2,
+    "affected_paper_ids": [
+      "10.2196/preprints.106157",
+      "10.3390/buildings16132637"
+    ],
+    "parameters": {
+      "fraction_of_remaining_rows": 0.1
+    }
+  }
+]
